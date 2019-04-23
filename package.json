@@ -1,0 +1,28 @@
+{
+  "name": "ens-nifty-backend",
+  "version": "1.0.0",
+  "description": "Netlify AWS Lambda functions for metadata and storing/retrieving names from hashes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ENS-Nifty/ens-nifty-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ENS-Nifty/ens-nifty-backend/issues"
+  },
+  "homepage": "https://github.com/ENS-Nifty/ens-nifty-backend#readme",
+  "dependencies": {
+    "bignumber.js": "^8.1.1",
+    "dotenv": "^7.0.0",
+    "ethers": "^4.0.27",
+    "express": "^4.16.4",
+    "faunadb": "^2.6.1",
+    "moment": "^2.24.0"
+  }
+}
