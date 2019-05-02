@@ -1,50 +1,47 @@
-const { utils } = require("ethers");
-const faunadb, { query } = require("faunadb");
+const { utils } = require('ethers')
+const faunadb = require('faunadb')
+const config = require('../config')
 
-require("dotenv").config();
+const client = new faunadb.Client(config.faunadb)
 
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SECRET
-});
-
-module.exports = (event, cb) => {
-  if (!event.body || !JSON.parse(event.body).label) {
-    return cb(null, {
-      statusCode: 500,
-      body: "Label not provided"
-    });
+module.exports = (req, res) => {
+  if (!req.body || !req.body.label) {
+    return res.status(500).send('Label not provided')
   }
-  const label = JSON.parse(event.body).label;
-  const hash = utils.id(label);
+  const { label } = req.body
+  const hash = utils.id(label)
   return client
     .query(
-      query.Let(
-        { ref: query.Match(query.Index("domain_by_label_hash"), hash) },
-        query.If(
-          query.Exists(query.Var("ref")),
+      faunadb.query.Let(
+        {
+          ref: faunadb.query.Match(
+            faunadb.query.Index('domain_by_label_hash'),
+            hash
+          )
+        },
+        faunadb.query.If(
+          faunadb.query.Exists(faunadb.query.Var('ref')),
           [
-            "updated",
-            query.Update(query.Select("ref", query.Get(query.Var("ref"))), {
-              data: { label, hash }
-            })
+            'updated',
+            faunadb.query.Update(
+              faunadb.query.Select(
+                'ref',
+                faunadb.query.Get(faunadb.query.Var('ref'))
+              ),
+              {
+                data: { label, hash }
+              }
+            )
           ],
           [
-            "created",
-            query.Create(query.Class("domains"), {
+            'created',
+            faunadb.query.Create(faunadb.query.Class('domains'), {
               data: { label, hash }
             })
           ]
         )
       )
     )
-    .then(ref =>
-      cb(null, {
-        statusCode: 200,
-        body: "OK"
-      })
-    )
-    .catch(err =>
-      cb(null, { statusCode: 400, body: err.name + ":" + err.message })
-    );
-};
-
+    .then(ref => res.status(200).send('OK'))
+    .catch(err => res.status(400).send(err.name + ':' + err.message))
+}

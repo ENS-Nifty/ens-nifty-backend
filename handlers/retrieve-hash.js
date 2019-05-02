@@ -1,13 +1,10 @@
-const { utils } = require("ethers");
+const { utils } = require('ethers')
 
-module.exports = (event, cb) => {
-  if (!event.queryStringParameters || !event.queryStringParameters.label) {
-    return cb(null, {
-      statusCode: 500,
-      body: "Label not provided"
-    });
+module.exports = (req, res) => {
+  if (!req.body || !req.body.label) {
+    return res.status(500).send('Label not provided')
   }
-  const label = event.queryStringParameters.label;
-  const hash = utils.id(label);
-  cb(null, { statusCode: 200, body: hash });
-};
+  const { label } = req.query
+  const hash = utils.id(label)
+  res.status(200).send(hash)
+}

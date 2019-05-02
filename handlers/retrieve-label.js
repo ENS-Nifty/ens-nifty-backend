@@ -1,24 +1,19 @@
-const faunadb, { query } =  require("faunadb");
+const faunadb = require('faunadb')
+const config = require('../config')
 
-require("dotenv").config();
+const client = new faunadb.Client(config.faunadb)
 
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SECRET
-});
-
-module.exports = (event, cb) => {
-  if (!event.queryStringParameters || !event.queryStringParameters.hash) {
-    return cb(null, {
-      statusCode: 500,
-      body: "Hash not provided"
-    });
+module.exports = (req, res) => {
+  if (!req.query || !req.query.hash) {
+    return res.status(500).send('Hash not provided')
   }
-  const hash =
-    "0x" + event.queryStringParameters.hash.replace("0x", "").padStart(64, 0);
+  const hash = '0x' + req.query.hash.replace('0x', '').padStart(64, 0)
   return client
-    .query(query.Get(query.Match(query.Index("domain_by_label_hash"), hash)))
-    .then(ret => cb(null, { statusCode: 200, body: ret.data.label }))
-    .catch(err =>
-      cb(null, { statusCode: 400, body: err.name + ":" + err.message })
-    );
-};
+    .query(
+      faunadb.query.Get(
+        faunadb.query.Match(faunadb.query.Index('domain_by_label_hash'), hash)
+      )
+    )
+    .then(ret => res.status(200).send(ret.data.label))
+    .catch(err => res.status(400).send(err.name + ':' + err.message))
+}
