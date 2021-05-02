@@ -43,5 +43,6 @@ app.get('/twitter', (req, res) => {
 })
 
 app.listen(config.port, () => {
+  console.log('hello??')
   console.log(`Listening on localhost:${config.port}`)
 })
