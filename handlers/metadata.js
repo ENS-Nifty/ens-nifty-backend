@@ -54,8 +54,7 @@ module.exports = (req, res) => {
 
   const labelHash = req.query.hash.toLowerCase()
 
-  console.log({labelHash})
-
+  // timdaub.eth
   if (labelHash == '0x3bf87c5c609b6a0e5b0daa400c18c396b1db1c927e55a0e1d61405b756e2b0b8') {
     let imageUrl = 'https://picsum.photos/200'
     let homeUrl = 'https://google.com'

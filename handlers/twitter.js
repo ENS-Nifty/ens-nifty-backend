@@ -4,7 +4,7 @@ const BigNumber = require('bignumber.js')
 const Twit = require('twit')
 const config = require('../config')
 
-// const twit = new Twit(config.twitter)
+const twit = new Twit(config.twitter)
 
 const client = new faunadb.Client(config.faunadb)
 
@@ -65,18 +65,18 @@ const tweet = label => {
     const link = `https://opensea.io/assets/${
       config.addresses.nifty
     }/${tokenId}`
-    // twit.post(
-    //   'statuses/update',
-    //   {
-    //     status: `${label}.eth has just been tokenized!\n\n${link}`
-    //   },
-    //   (err, data, response) => {
-    //     if (err) {
-    //       reject(err)
-    //     }
-    //     resolve(data)
-    //   }
-    // )
+    twit.post(
+      'statuses/update',
+      {
+        status: `${label}.eth has just been tokenized!\n\n${link}`
+      },
+      (err, data, response) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(data)
+      }
+    )
   })
 }
 

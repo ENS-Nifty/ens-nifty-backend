@@ -26,7 +26,7 @@ const contracts = { ens, registrar, nifty }
 
 module.exports = {
   env: env,
-  debug: true,
+  debug: debug,
   port: process.env.PORT || env === 'production' ? 5000 : 5001,
   twitter: {
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
